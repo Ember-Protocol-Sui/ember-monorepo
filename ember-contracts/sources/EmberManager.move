@@ -22,8 +22,7 @@ module ember_manager::EmberManager {
         balance: Balance<SUI>,
     }
 
-    /// Initialize and share the manager
-    fun init(ctx: &mut TxContext) {
+    public entry fun create_manager(ctx: &mut TxContext) {
         let manager = EmberManager {
             id: object::new(ctx),
             loans: table::new<u64, Loan>(ctx),
@@ -33,6 +32,7 @@ module ember_manager::EmberManager {
 
         transfer::share_object(manager);
     }
+
 
     /// -------------------------------
     /// Loan stored in table
@@ -104,7 +104,6 @@ module ember_manager::EmberManager {
         assert!(loan.state == 0, 4);
 
         let value = coin::value<SUI>(&coin);
-        assert!(value == loan.amount, 5);
 
         loan.lender = option::some(lender);
         loan.hash_secrets_lender = hash_secrets_lender;
